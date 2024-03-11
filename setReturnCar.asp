@@ -6,6 +6,11 @@ Response.Codepage = 65001  'Forces ASP to use UTF-8 for string encoding
 Response.Charset = "UTF-8" 'Sets charset variable of content type response header
 Response.LCID = 1037 'Hebrew Locale ID
 
+'method: POST'
+'will request car id'
+'will return the cars to mail db'
+'will response with status ok or error with error message'
+
 if TypeName(session("db")) = "Empty" or TypeName(session("userCars")) = "Empty" then
     response.write "{error: """"database or user cars""""}"
 else

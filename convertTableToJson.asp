@@ -1,5 +1,6 @@
 <%
-Function convertTableToJson(carsDictionary)
+'convert cars dictionery to json format'
+Function convertCarsDictionartToJSON(carsDictionary)
     dim r, rl, c, cl, str
     str = "["
     rl = carsDictionary.count
@@ -14,7 +15,7 @@ Function convertTableToJson(carsDictionary)
         str = str & "},"
     next
     str = Left(str, Len(str) - 1) & "]"
-    convertTableToJson = str
+    convertCarsDictionartToJSON = str
 end Function 
 
 %>

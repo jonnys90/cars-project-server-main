@@ -4,6 +4,11 @@ Response.Codepage = 65001  'Forces ASP to use UTF-8 for string encoding
 Response.Charset = "UTF-8" 'Sets charset variable of content type response header
 Response.LCID = 1037 'Hebrew Locale ID
 
+'method:POST'
+'will request array of car ids and quantitys of cars'
+'will update the database with the new quantitys'
+'if all good will return how many cars was updated'
+
 function parseJson(json)
     dim filter1, filterLine, filterCell, line
     dim i, j, k, r
@@ -36,15 +41,19 @@ function buyNewCars(carsToDelete)
     seccessCounter = 0
     for i=0 to UBound(itemsToDelete)
         idToDelete = carsToDelete.item(itemsToDelete(i)).item("id")
-        quantityToRemove = cint(carsToDelete.item(itemsToDelete(i)).item("quantity"))
-        if(cars.exists(idToDelete) and cint(cars.item(idToDelete).item("quantity")) >= quantityToRemove) then
-            cars.item(idToDelete).item("quantity") = cars.item(idToDelete).item("quantity") - quantityToRemove
-            if(userCars.exists(idToDelete) = false) then
-                userCars.add idToDelete, "0"
-            end if
-            userCars.item(idToDelete) = cint(userCars.item(idToDelete)) + cint(quantityToRemove)
-            seccessCounter = seccessCounter + 1
-        end if 
+        if isnumeric(carsToDelete.item(itemsToDelete(i)).item("quantity"))  then 
+            quantityToRemove = cint(carsToDelete.item(itemsToDelete(i)).item("quantity"))
+            if quantityToRemove > 0 then
+                if(cars.exists(idToDelete) and cint(cars.item(idToDelete).item("quantity")) >= quantityToRemove) then
+                    cars.item(idToDelete).item("quantity") = cars.item(idToDelete).item("quantity") - quantityToRemove
+                    if(userCars.exists(idToDelete) = false) then
+                        userCars.add idToDelete, "0"
+                    end if
+                    userCars.item(idToDelete) = cint(userCars.item(idToDelete)) + cint(quantityToRemove)
+                    seccessCounter = seccessCounter + 1
+                end if 
+            end if 
+        end if
     next
     set session("db") = cars
     set session("userCars") = userCars

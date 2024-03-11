@@ -27,7 +27,7 @@ sub initWanabidb()
 end sub
 call initWanabidb()
 
-Function convertTableToJson(table)
+Function convertCarsDictionartToJSON(table)
    Dim i,j, json, arrLen, arrItem
    json = ""
    arrLen = UBound(table)
@@ -42,10 +42,10 @@ Function convertTableToJson(table)
         json = left(json, len(json)-1) & "],"
    next
    json = left(json, len(json)-1)
-   convertTableToJson = "[" & json & "]"
+   convertCarsDictionartToJSON = "[" & json & "]"
 end Function 
 
 Dim jsonTable
-jsonTable = convertTableToJson(session("db"))
-Response.Write convertTableToJson(session("db"))
+jsonTable = convertCarsDictionartToJSON(session("db"))
+Response.Write convertCarsDictionartToJSON(session("db"))
 %>

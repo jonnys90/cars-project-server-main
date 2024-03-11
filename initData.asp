@@ -1,20 +1,31 @@
- <%@ language="Vbscript"%>
 <% 
 Response.Codepage = 65001  'Forces ASP to use UTF-8 for string encoding
 Response.Charset = "UTF-8" 'Sets charset variable of content type response header
 Response.LCID = 1037 'Hebrew Locale ID
 
+'description: this page should initialaize all "databases"'
+
+'initialize user cars'
+'the dictionary is stored in the session variable'
+'the structure of the dictionary is as follows:'
+'carId, quantity'
 sub initUserCars()
     dim cars
-    'if TypeName(session("userCars")) = "Empty" then
+    if TypeName(session("userCars")) = "Empty" then
         set cars = server.createObject("Scripting.Dictionary")
         set session("userCars") = cars
-    'end if
+    end if
 end sub
 
+'initialize car db'
+'the dictionary is stored in the session variable'
+'the structure of the dictionary is as follows:'
+'carId and inside another dictionary'
+'the structure of the inner dictionary is as follows:'
+'carId, carName, quantity'
 sub initWanabidb()
     dim cars
-    'if TypeName(session("db")) = "Empty" then
+    if TypeName(session("db")) = "Empty" then
         set cars = server.createObject("Scripting.Dictionary")
         cars.add "1", server.createObject("Scripting.Dictionary")
         cars.Item("1").add "id", 1
@@ -36,30 +47,10 @@ sub initWanabidb()
         cars.Item("4").add "carName", "Diatzu"
         cars.Item("4").add "quantity", 4
         set session("db") = cars
-    'end if
+    end if
 end sub
+
 call initUserCars()
 call initWanabidb()
 
-Function convertCarsDictionartToJSON(carsDictionary)
-    dim r, rl, c, cl, str
-    str = "["
-    rl = carsDictionary.count
-    for r = 1 to rl
-        cl = carsDictionary.item(cstr(r)).Keys
-        str = str & "{"
-        for c = 0 to UBound(cl)
-            str = str & """" & cl(c) & """" & ":"
-            str = str & """" & carsDictionary.item(cstr(r)).item(cl(c)) & """" & ","
-        next
-        str = Left(str, Len(str) - 1)
-        str = str & "},"
-    next
-    str = Left(str, Len(str) - 3) & "]"
-    convertCarsDictionartToJSON = str
-end Function 
-
-Dim jsonTable
-jsonTable = convertCarsDictionartToJSON(session("db"))
-Response.Write jsonTable
 %>
