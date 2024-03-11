@@ -1,4 +1,5 @@
 <%@ language="Vbscript"%>
+
 <% 
 Response.Codepage = 65001  'Forces ASP to use UTF-8 for string encoding
 Response.Charset = "UTF-8" 'Sets charset variable of content type response header
