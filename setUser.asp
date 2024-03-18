@@ -12,7 +12,7 @@ Response.LCID = 1037 'Hebrew Locale ID
 
 if request.form("username") = "Shlomo" then
     session("username") = request.form("username")
-    response.write "{status:ok}"
+    response.write "{status:""ok""}"
 else
     response.write "{error:""user not exists""}"
 end if

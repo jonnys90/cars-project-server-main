@@ -1,4 +1,5 @@
 <%@ language="Vbscript"%>
+<!--#include file="initData.asp"-->
 <% 
 Response.Codepage = 65001  'Forces ASP to use UTF-8 for string encoding
 Response.Charset = "UTF-8" 'Sets charset variable of content type response header
@@ -24,11 +25,15 @@ Function convertUserCarsToJson(carsDictionary)
     convertUserCarsToJson = str
 end Function 
 
-if TypeName(session("userCars")) <> "Empty" then
-    Dim jsonTable
-    jsonTable = convertUserCarsToJson(session("userCars"))
-    Response.Write jsonTable
+if TypeName(session("username")) = "Empty" then
+    response.write "{error: ""user not logged in""}"
 else
-    Response.Write "[]"
+    if TypeName(session("userCars")) <> "Empty" then
+        Dim jsonTable
+        jsonTable = convertUserCarsToJson(session("userCars"))
+        Response.Write jsonTable
+    else
+        response.write "{error: ""user not logged in""}"
+    end if
 end if
 %>
