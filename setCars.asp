@@ -1,5 +1,6 @@
 <%@ language="Vbscript"%>
-<!--#include file="initData.asp"-->
+<!--#include file="helpers/initData.asp"-->
+<!--#include file="helpers/authGuard.asp"-->
 <% 
 Response.Codepage = 65001  'Forces ASP to use UTF-8 for string encoding
 Response.Charset = "UTF-8" 'Sets charset variable of content type response header
@@ -63,17 +64,11 @@ end function
 
 dim seccessCounter
 
-if TypeName(session("username")) = "Empty" then
-    response.write "{error: """"user not logged in""""}"
+set carsToDelete = parseJson(request.form("cars"))
+if TypeName(session("db")) = "Empty" then
+    response.write "{""status"":""error"",""message"":""No cars in database""}"
 else
-    set carsToDelete = parseJson(request.form("cars"))
-    if TypeName(session("db")) = "Empty" then
-        response.write "{""status"":""error"",""message"":""No cars in database""}"
-    else
-        seccessCounter = buyNewCars(carsToDelete)
-        response.write "{""status"":""success"",""carsTransffered"":" & cstr(seccessCounter) & "}"
-    end if
+    seccessCounter = buyNewCars(carsToDelete)
+    response.write "{""status"":""success"",""carsTransffered"":" & cstr(seccessCounter) & "}"
 end if
-
-
 %>

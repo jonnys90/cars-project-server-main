@@ -1,5 +1,6 @@
 <%@ language="Vbscript"%>
-<!--#include file="initData.asp"-->
+<!--#include file="helpers/initData.asp"-->
+<!--#include file="helpers/authGuard.asp"-->
 <% 
 'add hebrew support
 Response.Codepage = 65001  'Forces ASP to use UTF-8 for string encoding
@@ -12,32 +13,33 @@ Response.LCID = 1037 'Hebrew Locale ID
 'will response with status ok or error with error message'
 
 function setReturnCar()
-	if TypeName(session("db")) = "Empty" or TypeName(session("userCars")) = "Empty" then
-		response.write "{error: """"database or user cars""""}"
-	else
-		dim userCars, cars, carId, carQuantity
-		set userCars = session("userCars")
-		set cars = session("db")
-		if(isnumeric(request.form("carId"))) then
-			carId = cint(request.form("carId"))
-			if(userCars.exists(cstr(carId))) then
-				carQuantity = cint(userCars.item(cstr(carId)))
-				cars.item(cstr(carId)).item("quantity") = cint(cars.item(cstr(carId)).item("quantity")) + carQuantity
-				userCars.remove(cstr(carId))
-				set session("userCars") = userCars
-				set session("db") = cars
-				response.write "{status: ""ok""}"
-			else
-				response.write "{error: ""please provide a valid id""}"
-			end if
+	if TypeName(session("db")) = "Empty" then
+		response.write "{""error"": ""cars database empty""}"
+		exit function
+	end if
+	if TypeName(session("userCars")) = "Empty" or session("userCars").count = 0 then
+		response.write "{""error"": ""user did not select any cars""}"
+		exit function
+	end if
+	dim userCars, cars, carId, carQuantity
+	set userCars = session("userCars")
+	set cars = session("db")
+	if(isnumeric(request.form("carId"))) then
+		carId = cint(request.form("carId"))
+		if(userCars.exists(cstr(carId))) then
+			carQuantity = cint(userCars.item(cstr(carId)))
+			cars.item(cstr(carId)).item("quantity") = cint(cars.item(cstr(carId)).item("quantity")) + carQuantity
+			userCars.remove(cstr(carId))
+			set session("userCars") = userCars
+			set session("db") = cars
+			response.write "{""status"": ""ok""}"
 		else
-			response.write "{error: ""please provide a number""}"
+			response.write "{""error"": ""please provide a valid id""}"
 		end if
+	else
+		response.write "{""error"": ""please provide a number""}"
 	end if
 end function
-if TypeName(session("username")) = "Empty" then
-    response.write "{error: """"user not logged in""""}"
-else
-    setReturnCar()
-end if
+setReturnCar()
+
  %>

@@ -1,5 +1,6 @@
 <%@ language="Vbscript"%>
-<!--#include file="initData.asp"-->
+<!--#include file="helpers/initData.asp"-->
+<!--#include file="helpers/authGuard.asp"-->
 <% 
 Response.Codepage = 65001  'Forces ASP to use UTF-8 for string encoding
 Response.Charset = "UTF-8" 'Sets charset variable of content type response header
@@ -13,7 +14,6 @@ Function convertUserCarsToJson(carsDictionary)
     dim r, rl, c, cl, str
     str = "["
     rl = carsDictionary.keys
-    'Response.Write rl & "|"
     for r = 0 to UBound(rl)
         str = str & "{"
         str = str & rl(r)
@@ -21,19 +21,20 @@ Function convertUserCarsToJson(carsDictionary)
         str = str & carsDictionary.item(cstr(rl(r)))
         str = str & "},"
     next
-    str = Left(str, Len(str) - 1) & "]"
-    convertUserCarsToJson = str
+    str = Left(str, Len(str) - 1)
+    if Len(str) = 0 then
+        str = "["
+    end if
+    convertUserCarsToJson = str & "]"
 end Function 
 
-if TypeName(session("username")) = "Empty" then
-    response.write "{error: ""user not logged in""}"
+
+if TypeName(session("userCars")) <> "Empty" then
+    Dim jsonTable
+    jsonTable = convertUserCarsToJson(session("userCars"))
+    Response.Write jsonTable
 else
-    if TypeName(session("userCars")) <> "Empty" then
-        Dim jsonTable
-        jsonTable = convertUserCarsToJson(session("userCars"))
-        Response.Write jsonTable
-    else
-        response.write "{error: ""user not logged in""}"
-    end if
+    response.write "{""error"": ""user not logged in""}"
 end if
+
 %>
