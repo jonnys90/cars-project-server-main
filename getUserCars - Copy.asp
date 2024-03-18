@@ -16,7 +16,7 @@ Function convertUserCarsToJson(carsDictionary)
     rl = carsDictionary.keys
     for r = 0 to UBound(rl)
         str = str & "{"
-        str = str & """" & rl(r) & """"
+        str = str & rl(r)
         str = str & ":"
         str = str & carsDictionary.item(cstr(rl(r)))
         str = str & "},"

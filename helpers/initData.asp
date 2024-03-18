@@ -2,7 +2,8 @@
 Response.Codepage = 65001  'Forces ASP to use UTF-8 for string encoding
 Response.Charset = "UTF-8" 'Sets charset variable of content type response header
 Response.LCID = 1037 'Hebrew Locale ID
-
+Call Response.AddHeader("Access-Control-Allow-Origin", "http://localhost:3000") 'allow cors for react project'
+Call Response.AddHeader("Access-Control-Allow-Credentials", "true") 'allow cookies for react project'
 'description: this page should initialaize all "databases"'
 
 'initialize user cars'

@@ -72,3 +72,4 @@ else
     response.write "{""status"":""success"",""carsTransffered"":" & cstr(seccessCounter) & "}"
 end if
 %>
+
